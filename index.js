@@ -12,6 +12,12 @@ const store = Mongo({
 const bot = new Telegraf(token);
 bot.use(session({ store }));
 
+const languages = {
+    "ru": "Русский 🇷🇺",
+    "fr": "France 🇫🇷",
+    "en": "English 🇬🇧",
+    "de": "Deutschland 🇩🇪"
+}
 bot.start(ctx => {
     ctx.reply(`Добро пожаловать, ${ctx.chat.username}!`);
 
@@ -50,8 +56,8 @@ bot.on('message', async (ctx) => {
 });
 
 bot.on("callback_query", async (ctx) => {
-    await store.set(ctx.update.callback_query.from.id, ctx.update.callback_query.data)
-    ctx.reply("Отправьте текст, который хотите перевести");
+    await store.set(ctx.update.callback_query.from.id, ctx.update.callback_query.data);
+    ctx.reply(`Выбран язык: ${languages[ctx.update.callback_query.data]}. Отправьте текст, который хотите перевести`);
 });
 
 bot.launch();
